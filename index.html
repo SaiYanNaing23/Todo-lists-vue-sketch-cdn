@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <style>
+        ul{
+            list-style: none;
+        }
+        .done{
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>{{title}}</h1>
+        <form @submit.prevent="addItems()">
+            <input type="text" v-model="newItems" >
+            <button type="submit" :disabled="newItems.length === 0">Add Todos</button>
+        </form>
+
+        <ul>
+            <li v-for="(todo,index) in todos">
+                <input type="checkbox" v-model="todo.completed">
+                <span :class="{'done' : todo.completed  }">{{todo.text}}</span>
+                <button @click="removeItems(index)" v-show="todo.completed">Delete</button>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data : {
+                title : "TODOS",
+                newItems : "",
+                todos : [
+                    {text : "fired Potato", completed : false},
+                    {text : "fired egg", completed : false},
+                ],
+            },
+            
+            methods: {
+                addItems(){
+                    let items = {
+                        text : this.newItems,
+                        completed : false,
+                    }
+                    this.todos = [items,...this.todos];
+                    this.newItems = "";
+                },
+                removeItems(index){
+                    this.todos.splice(index , 1);
+                }
+            }
+        })
+    </script>
+</body>
+</html>
