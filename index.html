@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -67,6 +67,101 @@
                         return todo.completed === false;
                     })
                     return total.length;
+                }
+            },
+            created(){
+                this.getItems()
+            }
+        })
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List Pratice</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #a78bfa;
+        }
+        h1{
+            text-transform: uppercase;
+        }
+        #root{
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20%;
+            flex-direction: column;
+        }
+        .add{
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            border: 2px solid #fff;
+            padding: 2px 5px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .done{
+            text-decoration: line-through;
+        }
+        ul{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <h1>{{title}} ({{todos.length}})</h1>
+        <form @submit.prevent="addItems()">
+            <input type="text" v-model="newItems">
+            <button type="submit" class="add" :disabled="newItems.length === 0">Add Todo</button>
+        </form>
+        <ul>
+            <li v-for="(todo,index) in todos">
+                <input type="checkbox" v-model="todo.completed">
+                <span :class="{'done' : todo.completed}">{{todo.title}}</span>
+                <button v-show="todo.completed" @click="removeItems(index)">Delete</button>
+            </li>
+        </ul>
+
+    </div>
+
+
+
+    <script>
+        new Vue ({
+            el: "#root",
+            data : {
+                title : "Todo list",
+                newItems : '',
+                todos : [{title:"g"}]
+            },
+            methods : {
+                getItems(){
+                    fetch('https://jsonplaceholder.typicode.com/todos?_limit=3')
+                    .then(response => response.json())
+                    .then(json => this.todos = json)
+                },
+                addItems(){
+                    let items = {
+                        title : this.newItems,
+                        completed : false
+                    }
+                    this.todos = [items,...this.todos]
+                    this.newItems = "";
+                },
+                removeItems(index){
+                    return this.todos.splice(index,1)
                 }
             },
             created(){
